@@ -25,5 +25,5 @@ UsersRouter.routesConfig(app);
 
 
 app.listen(config.port, function () {
-    console.log('app listening at port %s', config.port);
+    console.log(`app is listening on port ${config.port}`);
 });

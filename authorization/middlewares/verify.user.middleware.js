@@ -30,6 +30,7 @@ exports.isPasswordAndUserMatch = (req, res, next) => {
       res.status(404).send({});
     } else {
       let passwordFields = user[0].password.split("$");
+
       let salt = passwordFields[0];
       let hash = crypto
         .createHmac("sha512", salt)
