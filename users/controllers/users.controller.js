@@ -1,7 +1,8 @@
 const UserModel = require("../models/users.model");
+const mongoose = require("mongoose");
 const crypto = require("crypto");
 
-exports.insert = (req, res) => {
+exports.insert = async (req, res) => {
   let salt = crypto.randomBytes(16).toString("base64");
   let hash = crypto
     .createHmac("sha512", salt)
@@ -9,6 +10,14 @@ exports.insert = (req, res) => {
     .digest("base64");
   req.body.password = salt + "$" + hash;
   req.body.permissionLevel = 1;
+  let data = req.body.email;
+  let findEmail = await UserModel.findByEmail(data);
+  if (findEmail.length) {
+    return res.status(400).send({
+      status: false,
+      message: "this emailid is already registered please use new one",
+    });
+  }
   UserModel.createUser(req.body).then((result) => {
     res.status(201).send({ id: result._id });
   });
@@ -45,7 +54,7 @@ exports.patchById = (req, res) => {
   }
 
   UserModel.patchUser(req.params.userId, req.body).then((result) => {
-    res.status(204).send({});
+    res.status(200).send({ result });
   });
 };
 
