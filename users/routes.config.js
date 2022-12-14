@@ -10,26 +10,33 @@ const FREE = config.permissionLevels.NORMAL_USER;
 exports.routesConfig = function (app) {
   app.post("/users", UsersController.insert);
 
-  app.get("/users", 
+  app.get(
+    "/users",
     ValidationMiddleware.validJWTNeeded,
     PermissionMiddleware.minimumPermissionLevelRequired(PAID),
     UsersController.list
   );
 
-  app.get("/users/:userId", 
+  app.get(
+    "/users/:userId",
     ValidationMiddleware.validJWTNeeded,
     PermissionMiddleware.minimumPermissionLevelRequired(FREE),
     PermissionMiddleware.onlySameUserOrAdminCanDoThisAction,
-    UsersController.getById);
+    UsersController.getById
+  );
 
-  app.patch("/users/:userId", 
+  app.patch(
+    "/users/:userId",
     ValidationMiddleware.validJWTNeeded,
     PermissionMiddleware.minimumPermissionLevelRequired(FREE),
     PermissionMiddleware.onlySameUserOrAdminCanDoThisAction,
-    UsersController.patchById);
+    UsersController.patchById
+  );
 
-  app.delete("/users/:userId",
+  app.delete(
+    "/users/:userId",
     ValidationMiddleware.validJWTNeeded,
     PermissionMiddleware.minimumPermissionLevelRequired(ADMIN),
-    UsersController.removeById);
+    UsersController.removeById
+  );
 };
