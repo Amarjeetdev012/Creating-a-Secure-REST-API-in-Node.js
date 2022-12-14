@@ -1,34 +1,36 @@
-const mongoose = require("../../common/services/mongoose.service").mongoose;
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-  firstName: String,
-  lastName: String,
-  email: String,
-  password: String,
-  permissionLevel: Number,
-});
+const userSchema = new Schema(
+  {
+    firstName: String,
+    lastName: String,
+    email: String,
+    password: String,
+    permissionLevel: Number,
+  },
+  { timestamps: true }
+);
 
-userSchema.virtual("id").get(function () {
+userSchema.virtual('id').get(() => {
   return this._id.toHexString();
 });
 
-// Ensure virtual fields are serialised.
-userSchema.set("toJSON", {
+userSchema.set('toJSON', {
   virtuals: true,
 });
 
-userSchema.findById = function (cb) {
-  return this.model("Users").find({ id: this.id }, cb);
+userSchema.findById = (cb) => {
+  return this.model('Users').find({ id: this.id }, cb);
 };
 
-const User = mongoose.model("Users", userSchema);
+const User = mongoose.model('Users', userSchema);
 
-exports.findByEmail = (email) => {
+const findByEmail = (email) => {
   return User.find({ email: email });
 };
 
-exports.findById = (id) => {
+const findById = (id) => {
   return User.findById(id).then((result) => {
     result = result.toJSON();
     delete result._id;
@@ -37,17 +39,17 @@ exports.findById = (id) => {
   });
 };
 
-exports.createUser = (userData) => {
+const createUser = (userData) => {
   const user = new User(userData);
   return user.save();
 };
 
-exports.list = (perPage, page) => {
+const list = (perPage, page) => {
   return new Promise((resolve, reject) => {
     User.find()
       .limit(perPage)
       .skip(perPage * page)
-      .exec(function (err, users) {
+      .exec((err, users) => {
         if (err) {
           reject(err);
         } else {
@@ -57,7 +59,7 @@ exports.list = (perPage, page) => {
   });
 };
 
-exports.patchUser = (id, userData) => {
+const patchUser = (id, userData) => {
   return User.findOneAndUpdate(
     {
       _id: id,
@@ -66,7 +68,7 @@ exports.patchUser = (id, userData) => {
   );
 };
 
-exports.removeById = (userId) => {
+const removeById = (userId) => {
   return new Promise((resolve, reject) => {
     User.deleteMany({ _id: userId }, (err) => {
       if (err) {
@@ -77,3 +79,5 @@ exports.removeById = (userId) => {
     });
   });
 };
+
+export { findByEmail, findById, createUser, list, patchUser, removeById };

@@ -1,17 +1,22 @@
-const VerifyUserMiddleware = require("./middlewares/verify.user.middleware");
-const AuthorizationController = require("./controllers/authorization.controller");
-const AuthValidationMiddleware = require("../common/middlewares/auth.validation.middleware");
-exports.routesConfig = function (app) {
-  app.post("/auth", [
-    VerifyUserMiddleware.hasAuthValidFields,
-    VerifyUserMiddleware.isPasswordAndUserMatch,
-    AuthorizationController.login,
-  ]);
+import {
+  hasAuthValidFields,
+  isPasswordAndUserMatch,
+} from './middlewares/verify.user.middleware';
+import { login } from './controllers/authorization.controller';
+import {
+  verifyRefreshBodyField,
+  validRefreshNeeded,
+  validJWTNeeded,
+} from '../common/middlewares/auth.validation.middleware';
+const routesConfig = (app) => {
+  app.post('/auth', [hasAuthValidFields, isPasswordAndUserMatch, login]);
 
-  app.post("/auth/refresh", [
-    AuthValidationMiddleware.validJWTNeeded,
-    AuthValidationMiddleware.verifyRefreshBodyField,
-    AuthValidationMiddleware.validRefreshNeeded,
-    AuthorizationController.login,
+  app.post('/auth/refresh', [
+    validJWTNeeded,
+    verifyRefreshBodyField,
+    validRefreshNeeded,
+    login,
   ]);
 };
+
+export default routesConfig;

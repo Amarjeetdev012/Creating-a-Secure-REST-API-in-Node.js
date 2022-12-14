@@ -1,23 +1,23 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose'
 let count = 0;
 
-mongoose.set("strictQuery", true);
+mongoose.set('strictQuery', true);
 
 const connectWithRetry = () => {
-  console.log("mongodb is connecting ...")
+  console.log('mongodb is connecting ...');
   mongoose
     .connect(
-      "mongodb+srv://amarjeet:pRxovl0TSsV3lTEm@cluster0.rthihii.mongodb.net/test",
+      'mongodb+srv://amarjeet:pRxovl0TSsV3lTEm@cluster0.rthihii.mongodb.net/test',
       {
         useNewUrlParser: true,
       }
     )
     .then(() => {
-      console.log("MongoDB is connected");
+      console.log('MongoDB is connected');
     })
     .catch((err) => {
       console.log(
-        "MongoDB connection unsuccessful, retry after 5 seconds. ",
+        'MongoDB connection unsuccessful, retry after 5 seconds. ',
         ++count
       );
       setTimeout(connectWithRetry, 1000);
@@ -26,4 +26,4 @@ const connectWithRetry = () => {
 
 connectWithRetry();
 
-exports.mongoose = mongoose;
+export default connectWithRetry

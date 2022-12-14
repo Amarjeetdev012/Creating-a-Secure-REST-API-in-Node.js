@@ -1,27 +1,23 @@
-const ADMIN_PERMISSION = require("../config/env.config")["permissionLevels"][
-  "ADMIN"
-];
+import ADMIN_PERMISSION from '../config/env.config'
 
-exports.minimumPermissionLevelRequired = (required_permission_level) => {
+const minimumPermissionLevelRequired = (required_permission_level) => {
   return (req, res, next) => {
-    let user_permission_level = req.jwt.permissionLevel;
+    const user_permission_level = req.jwt.permissionLevel;
     if (user_permission_level & required_permission_level) {
       return next();
     } else {
-      return res
-        .status(403)
-        .send({
-          status: false,
-          message: "error from mininimum permission level",
-        });
+      return res.status(403).send({
+        status: false,
+        message: 'error from mininimum permission level',
+      });
     }
   };
 };
 
-exports.onlySameUserOrAdminCanDoThisAction = (req, res, next) => {
-  let user_permission_level = parseInt(req.jwt.permissionLevel);
-  let userId = req.jwt.userId;
-  console.log(req.params.userId)
+const onlySameUserOrAdminCanDoThisAction = (req, res, next) => {
+  const user_permission_level = parseInt(req.jwt.permissionLevel);
+  const userId = req.jwt.userId;
+  console.log(req.params.userId);
   if (req.params && req.params.userId && userId === req.params.userId) {
     return next();
   } else {
@@ -33,11 +29,14 @@ exports.onlySameUserOrAdminCanDoThisAction = (req, res, next) => {
   }
 };
 
-exports.sameUserCantDoThisAction = (req, res, next) => {
-  let userId = req.jwt.userId;
+const sameUserCantDoThisAction = (req, res, next) => {
+  const userId = req.jwt.userId;
   if (req.params.userId !== userId) {
     return next();
   } else {
     return res.status(400).send();
   }
 };
+
+
+export {sameUserCantDoThisAction,onlySameUserOrAdminCanDoThisAction,minimumPermissionLevelRequired}
