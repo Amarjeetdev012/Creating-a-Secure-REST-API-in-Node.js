@@ -9,7 +9,7 @@ import {
   validJWTNeeded,
 } from '../common/middlewares/auth.validation.middleware';
 const routesConfig = (app) => {
-  app.post('/auth', [hasAuthValidFields, isPasswordAndUserMatch, login]);
+  app.post('/auth', hasAuthValidFields, isPasswordAndUserMatch, login);
 
   app.post('/auth/refresh', [
     validJWTNeeded,

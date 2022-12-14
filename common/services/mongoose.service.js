@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 let count = 0;
 
 mongoose.set('strictQuery', true);
@@ -24,6 +24,4 @@ const connectWithRetry = () => {
     });
 };
 
-connectWithRetry();
-
-export default connectWithRetry
+export default connectWithRetry;

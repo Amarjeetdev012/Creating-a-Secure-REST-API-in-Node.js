@@ -12,14 +12,6 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-userSchema.virtual('id').get(() => {
-  return this._id.toHexString();
-});
-
-userSchema.set('toJSON', {
-  virtuals: true,
-});
-
 userSchema.findById = (cb) => {
   return this.model('Users').find({ id: this.id }, cb);
 };

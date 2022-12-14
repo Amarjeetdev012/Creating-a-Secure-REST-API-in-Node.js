@@ -1,9 +1,8 @@
-import {findByEmail} from '../../users/models/users.model';
-import crypto from 'crypto'
+import { findByEmail } from '../../users/models/users.model';
+import crypto from 'crypto';
 
 const hasAuthValidFields = (req, res, next) => {
   const errors = [];
-
   if (req.body) {
     if (!req.body.email) {
       errors.push('Missing email field');

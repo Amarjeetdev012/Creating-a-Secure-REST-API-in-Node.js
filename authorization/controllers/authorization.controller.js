@@ -1,13 +1,14 @@
-import  sign  from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+import config from '../../common/config/env.config';
 import { randomBytes, createHmac } from 'crypto';
+const { sign } = jwt;
+const jwtSecret = config.jwt_secret;
 
-export function login(req, res) {
+const login = (req, res) => {
   try {
     const refreshId = req.body.userId + jwtSecret;
     const salt = randomBytes(16).toString('base64');
-    const hash = createHmac('sha512', salt)
-      .update(refreshId)
-      .digest('base64');
+    const hash = createHmac('sha512', salt).update(refreshId).digest('base64');
     req.body.refreshKey = salt;
     const token = sign(req.body, jwtSecret);
     const b = Buffer.from(hash);
@@ -16,9 +17,9 @@ export function login(req, res) {
   } catch (err) {
     res.status(500).send({ errors: err });
   }
-}
+};
 
-export function refresh_token(req, res) {
+const refresh_token = (req, res) => {
   try {
     req.body = req.jwt;
     const token = sign(req.body, jwtSecret);
@@ -26,4 +27,6 @@ export function refresh_token(req, res) {
   } catch (err) {
     res.status(500).send({ errors: err });
   }
-}
+};
+
+export { refresh_token, login };

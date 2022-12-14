@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
-import secret from '../config/env.config.js';
+import config from '../config/env.config.js';
 import crypto from 'crypto';
+const secret = config.jwt_secret;
 
 const verifyRefreshBodyField = (req, res, next) => {
   if (req.body && req.body.refresh_token) {
