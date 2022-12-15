@@ -1,24 +1,24 @@
 import jwt from 'jsonwebtoken';
 import config from '../config/env.config.js';
 import crypto from 'crypto';
-const secret = config.jwt_secret;
+const secret = config.JWT.SECRET;
 
 const verifyRefreshBodyField = (req, res, next) => {
-  if (req.body && req.body.refresh_token) {
+  if (req.body && req.body.refreshToken) {
     return next();
   } else {
-    return res.status(400).send({ error: 'need to pass refresh_token field' });
+    return res.status(400).send({ error: 'need to pass refreshToken field' });
   }
 };
 
 const validRefreshNeeded = (req, res, next) => {
-  let b = Buffer.from(req.body.refresh_token, 'base64');
-  let refresh_token = b.toString();
+  let b = Buffer.from(req.body.refreshToken, 'base64');
+  let refreshToken = b.toString();
   let hash = crypto
     .createHmac('sha512', req.jwt.refreshKey)
     .update(req.jwt.userId + secret)
     .digest('base64');
-  if (hash === refresh_token) {
+  if (hash === refreshToken) {
     req.body = req.jwt;
     return next();
   } else {

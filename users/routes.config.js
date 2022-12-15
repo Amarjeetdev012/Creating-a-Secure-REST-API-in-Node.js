@@ -11,19 +11,18 @@ import {
 } from '../common/middlewares/auth.permission.middleware';
 import { validJWTNeeded } from '../common/middlewares/auth.validation.middleware';
 import config from '../common/config/env.config';
-const ADMIN = config.permissionLevels.ADMIN;
-const PAID = config.permissionLevels.PAID_USER;
-const FREE = config.permissionLevels.NORMAL_USER;
+const admin = config.PERMISSION_LEVELS.ADMIN;
+const paid = config.PERMISSION_LEVELS.PAID_USER;
+const free = config.PERMISSION_LEVELS.NORMAL_USER;
 
 const routesConfig = (app) => {
   app.post('/users', insert);
 
-  app.get('/users', validJWTNeeded, minimumPermissionLevelRequired(PAID), list);
+  app.get('/users', validJWTNeeded, minimumPermissionLevelRequired(paid), list);
 
   app.get(
     '/users/:userId',
     validJWTNeeded,
-    minimumPermissionLevelRequired(FREE),
     onlySameUserOrAdminCanDoThisAction,
     getById
   );
@@ -31,7 +30,6 @@ const routesConfig = (app) => {
   app.patch(
     '/users/:userId',
     validJWTNeeded,
-    minimumPermissionLevelRequired(FREE),
     onlySameUserOrAdminCanDoThisAction,
     patchById
   );
@@ -39,7 +37,7 @@ const routesConfig = (app) => {
   app.delete(
     '/users/:userId',
     validJWTNeeded,
-    minimumPermissionLevelRequired(ADMIN),
+    minimumPermissionLevelRequired(admin),
     removeById
   );
 };

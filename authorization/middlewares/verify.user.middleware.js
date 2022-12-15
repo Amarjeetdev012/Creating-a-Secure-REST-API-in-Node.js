@@ -13,9 +13,8 @@ const hasAuthValidFields = (req, res, next) => {
 
     if (errors.length) {
       return res.status(400).send({ errors: errors.join(',') });
-    } else {
-      return next();
     }
+    return next();
   } else {
     return res
       .status(400)

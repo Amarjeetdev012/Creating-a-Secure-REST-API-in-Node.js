@@ -1,9 +1,10 @@
-import ADMIN_PERMISSION from '../config/env.config';
+import config from '../config/env.config';
+const AdminPermission = config.PERMISSION_LEVELS.ADMIN;
 
-const minimumPermissionLevelRequired = (required_permission_level) => {
+const minimumPermissionLevelRequired = (requiredPermissionLevel) => {
   return (req, res, next) => {
-    const user_permission_level = req.jwt.permissionLevel;
-    if (user_permission_level & required_permission_level) {
+    const userPermissionLevel = req.jwt.permissionLevel;
+    if (userPermissionLevel >= requiredPermissionLevel) {
       return next();
     } else {
       return res.status(403).send({
@@ -15,12 +16,12 @@ const minimumPermissionLevelRequired = (required_permission_level) => {
 };
 
 const onlySameUserOrAdminCanDoThisAction = (req, res, next) => {
-  const user_permission_level = parseInt(req.jwt.permissionLevel);
+  const userPermissionLevel = parseInt(req.jwt.permissionLevel);
   const userId = req.jwt.userId;
   if (req.params && req.params.userId && userId === req.params.userId) {
     return next();
   } else {
-    if (user_permission_level & ADMIN_PERMISSION) {
+    if (userPermissionLevel & AdminPermission) {
       return next();
     } else {
       return res.status(403).send();

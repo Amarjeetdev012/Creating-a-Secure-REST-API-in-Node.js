@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import config from '../../common/config/env.config';
 import { randomBytes, createHmac } from 'crypto';
 const { sign } = jwt;
-const jwtSecret = config.jwt_secret;
+const jwtSecret = config.JWT.SECRET;
 
 const login = (req, res) => {
   try {
@@ -12,14 +12,14 @@ const login = (req, res) => {
     req.body.refreshKey = salt;
     const token = sign(req.body, jwtSecret);
     const b = Buffer.from(hash);
-    const refresh_token = b.toString('base64');
-    res.status(201).send({ accessToken: token, refreshToken: refresh_token });
+    const refreshToken = b.toString('base64');
+    res.status(201).send({ accessToken: token, refreshToken: refreshToken });
   } catch (err) {
     res.status(500).send({ errors: err });
   }
 };
 
-const refresh_token = (req, res) => {
+const refreshToken = (req, res) => {
   try {
     req.body = req.jwt;
     const token = sign(req.body, jwtSecret);
@@ -29,4 +29,4 @@ const refresh_token = (req, res) => {
   }
 };
 
-export { refresh_token, login };
+export { refreshToken, login };
