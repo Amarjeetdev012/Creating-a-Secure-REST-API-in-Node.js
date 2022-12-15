@@ -12,3 +12,36 @@ return res.sendStatus(200);
 return next();
 }
 }); -->
+
+
+const mongoose = require('../../common/services/mongoose.service').mongoose;
+const Schema = mongoose.Schema;
+const functions = require('./functions');
+
+const userSchema = new Schema({
+    email: String,
+    password: String,
+    number: String,
+    state: Boolean
+});
+
+userSchema.virtual('id').get(function () {
+    return this._id.toHexString();
+});
+
+// Ensure virtual fields are serialised.
+userSchema.set('toJSON', {
+    virtuals: true
+});
+
+userSchema.findById = function (cb) {
+    return this.model('Users').find({id: this.id}, cb);
+};
+
+const User = mongoose.model('Users', userSchema);
+
+
+exports.findByEmail = (email) => {
+    //console.log('hello'); //this works btw
+    return User.find({email: email});
+};
